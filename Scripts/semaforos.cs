@@ -4,16 +4,16 @@ using UnityEngine;
 using UnityEngine.Networking;
 
 [System.Serializable]
-public class LightState
+public class Estado
 {
     public string id;
     public float[] state; // Utiliza un arreglo de float en lugar de Vector2.
 }
 
 [System.Serializable]
-public class LightStateList
+public class ListaEstados
 {
-    public LightState[] states;
+    public Estado[] states;
 }
 
 //------------------------------------------------------------------------------------------------
@@ -24,8 +24,7 @@ public class semaforos : MonoBehaviour
 
     void Start()
     {
-        DontDestroyOnLoad(gameObject); // Agrega esta línea al principio del método Start
-        for (int i = 185; i <= 188; i++)
+        for (int i = 457; i <= 492; i++)
         {
             string semaforoId = "semaforo_" + i;
             GameObject semaforoObject = GameObject.Find(semaforoId);
@@ -51,11 +50,9 @@ public class semaforos : MonoBehaviour
             else
             {
                 string jsonString = www.downloadHandler.text;
-                LightStateList lightStates = JsonUtility.FromJson<LightStateList>("{\"states\":" + jsonString + "}");
-                foreach (LightState LS in lightStates.states)
+                ListaEstados lightStates = JsonUtility.FromJson<ListaEstados>("{\"states\":" + jsonString + "}");
+                foreach (Estado LS in lightStates.states)
                 {
-                    Debug.Log("Procesando: " + LS.id + " en estado: " + LS.state[0]);  // Esto imprimirá cada posición procesada
-
                     if (semaforoObjects.TryGetValue(LS.id, out GameObject semaforoObject))
                     {
                         if (semaforoObject == null)
@@ -64,8 +61,7 @@ public class semaforos : MonoBehaviour
                             continue; // Salta a la próxima iteración del bucle
                         }
 
-                        // Comprueba que haya exactamente dos elementos en el arreglo de posición.
-                        if (LS.state != null && LS.state.Length == 1)
+                        if (LS.state != null && LS.state.Length == 3)
                         {
                             Transform verde = semaforoObject.transform.Find("verde");
                             Transform amarillo = semaforoObject.transform.Find("amarillo");
